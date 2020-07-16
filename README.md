@@ -2,6 +2,8 @@
 
 Prometheus Endpoint, written in Python to values from vcgencmd on a raspberry pi.
 
+[![Build Status](https://ci.devopoly.de/api/badges/lukibahr/raspbi-vcgencmd-exporter/status.svg)](https://ci.devopoly.de/lukibahr/raspbi-vcgencmd-exporter)
+
 ## Implementation
 
 Have a look at the sourcecode for details. Generally, you'll have to download and import the required python libraries.
