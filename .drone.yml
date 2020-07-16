@@ -1,0 +1,23 @@
+---
+kind: pipeline
+name: build
+
+clone:
+  depth: 50
+
+steps:
+
+  - name: publish
+    image: plugins/docker:linux-arm
+    settings:
+      repo: lukasbahr/raspbi-dht22-exporter
+      tags: $DRONE_TAG
+      dockerfile: Dockerfile
+      username:
+        from_secret: REGISTRY_USER
+      password:
+        from_secret: REGISTRY_PASSWORD
+    when:
+      event:
+        - push
+        - tag
