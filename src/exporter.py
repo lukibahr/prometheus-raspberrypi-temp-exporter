@@ -33,7 +33,8 @@ class CustomCollector():
         f = GaugeMetricFamily("core_temperature_in_fahrenheit", 'Core temperature in fahrenheit', labels=['node', 'appversion'])
 
         with open(CPUTEMP, 'r') as reader:
-            celcius_core_temp = reader.read()
+            temp = reader.read()
+            celcius_core_temp = temp / 1000
             fahrenheit_core_temp = (9/5)* float(celcius_core_temp) + 32
 
         c.add_metric([self.node, appversion], celcius_core_temp)
