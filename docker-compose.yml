@@ -4,11 +4,11 @@ services:
   exporter:
     restart: always
     container_name: exporter
-    image: image:arm32v6
+    image: docker.io/lukasbahr/prometheus-raspberrypi-temp-exporter:v0.0.1
     environment:
-      - EXPORTER_PORT=9102
+      - APPVERSION=v0.0.3
     expose: 
-      - 9102
+      - 9234
     networks:
       - pi
 
