@@ -1,4 +1,4 @@
-FROM hypriot/rpi-alpine:3.6
+FROM python:3.7-alpine
 
 RUN apk add python3 gcc python3-dev libc-dev --no-cache
 
