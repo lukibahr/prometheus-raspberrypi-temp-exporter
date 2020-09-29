@@ -1,8 +1,8 @@
 FROM python:3.7-alpine
 
-RUN apk add python3 gcc python3-dev libc-dev --no-cache
+RUN apk add python3=3.8.5-r0 gcc=9.3.0-r2 python3-dev=3.8.5-r0 libc-dev=0.7.2-r3 --no-cache
 
-WORKDIR "/exporter"
+WORKDIR /exporter
 
 COPY requirements.txt .
 

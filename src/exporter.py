@@ -6,6 +6,7 @@ Prometheus running in kubernetes will automatically scrape this service.
 import time
 import argparse
 import logging
+import os
 import socket
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from prometheus_client import start_http_server
@@ -23,21 +24,26 @@ class CustomCollector():
 
     def collect(self):
         """collect collects the metrics"""
-        c = GaugeMetricFamily("core_temperature_in_celcius", 'Core temperature in celcuis', labels=['node'])
-        f = GaugeMetricFamily("core_temperature_in_fahrenheit", 'Core temperature in fahrenheit', labels=['node'])
+        if "APPVERSION" in os.environ:
+            appversion = os.environ["APPVERSION"]
+        else:
+            appversion = "unset"
+
+        c = GaugeMetricFamily("core_temperature_in_celcius", 'Core temperature in celcuis', labels=['node', 'appversion'])
+        f = GaugeMetricFamily("core_temperature_in_fahrenheit", 'Core temperature in fahrenheit', labels=['node', 'appversion'])
 
         with open(CPUTEMP, 'r') as reader:
             celcius_core_temp = reader.read()
             fahrenheit_core_temp = (9/5)* float(celcius_core_temp) + 32
 
-        c.add_metric([self.node], celcius_core_temp)
-        f.add_metric([self.node], fahrenheit_core_temp)
-        
+        c.add_metric([self.node, appversion], celcius_core_temp)
+        f.add_metric([self.node, appversion], fahrenheit_core_temp)
+
         yield f
         yield c
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Prometheus raspberry pi temp exporter')
+    parser = argparse.ArgumentParser(description='prometheus-raspberrypi-temp-exporter')
     parser.add_argument('-n', '--node', type=str, help='The node, the exporter runs on', default=socket.gethostname())
     parser.add_argument('-p', '--port', type=int, help='The port, the exporter runs on', default=9234)
     parser.add_argument('-i', '--interval', type=int, help='The sleep interval of the exporter', default=120)

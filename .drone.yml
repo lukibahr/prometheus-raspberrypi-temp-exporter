@@ -6,22 +6,27 @@ clone:
   depth: 50
 
 steps:
-  - name: fetch
-    image: docker:git
+  - name: hadolint
+    image: hadolint/hadolint:latest-debian
     commands:
-      - git fetch --tags
-
+      - hadolint --version
+      - hadolint  Dockerfile
+      
   - name: publish
     image: plugins/docker
+    environment:
+      APPVERSION: ${DRONE_TAG}
     settings:
-      repo: lukasbahr/raspbi-vcgencmd-exporter
-      tags: arm32v6
-      #tags: $DRONE_TAG
+      repo: lukasbahr/prometheus-raspberrypi-temp-exporter
+      tags: 
+        - ${DRONE_TAG}
       dockerfile: Dockerfile
       username:
         from_secret: REGISTRY_USER
       password:
         from_secret: REGISTRY_PASSWORD
+      build_args:
+        - DRONE_TAG=${DRONE_TAG}
     when:
       event:
         - push
