@@ -67,5 +67,4 @@ Create git tag for building a image with a tagged version: `git tag <PROM_VERSIO
 ## Open ToDo's
 
 - :heavy_check_mark: Add CI/CD Support.
-- :x: Add unit tests
-- :x: Fix docs for docker-compose and docker run
+- :heavy_check_mark: Fix docs for docker-compose and docker run
