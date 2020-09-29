@@ -11,7 +11,7 @@ steps:
     commands:
       - hadolint --version
       - hadolint  Dockerfile
-      
+
   - name: publish
     image: plugins/docker
     environment:

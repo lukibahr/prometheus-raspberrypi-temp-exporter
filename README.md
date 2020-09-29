@@ -1,8 +1,8 @@
-# Prometheus exporter for vcgencmd
+# Prometheus exporter for Raspberry Pi core temperature
 
-Prometheus Endpoint, written in Python to values from vcgencmd on a raspberry pi.
+Prometheus Endpoint, written in Python to values from CPU core on a raspberry pi.
 
-[![Build Status](https://ci.devopoly.de/api/badges/lukibahr/raspbi-vcgencmd-exporter/status.svg)](https://ci.devopoly.de/lukibahr/raspbi-vcgencmd-exporter)
+[![Build Status](https://ci.devopoly.de/api/badges/lukibahr/prometheus-raspberrypi-temp-exporter/status.svg)](https://ci.devopoly.de/lukibahr/prometheus-raspberrypi-temp-exporter)
 
 ## Implementation
 
@@ -17,20 +17,20 @@ You'll need to install python (I recommend python3) to prepare your local enviro
 $ sudo apt-get update
 $ sudo apt-get install python3-pip
 $ sudo python3 -m pip install --upgrade pip setuptools wheel
-$ sudo pip3 install prometheus_client vcgencmd
+$ sudo pip3 install prometheus_client
 $ python3 exporter.py --< args[] >
 ```
 
 ## Running in docker
 
-I've used hypriot os with a RaspberryPi 3B+. It works on a Raspberry Pi 2 too, although docker builds might take some time, so be calm to your Pi.
+Running the exporter is supported on RaspberryPi 2|3B|+|4. Builds on Raspberry Pi 2 might take some time, so be calm to your Pi.
 
 ```bash
  python3 src/exporter.py --help
 usage: exporter.py [-h] [-n NODE] [-p PORT] [-i INTERVAL]
                    [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
-Prometheus vcgencmd exporter
+exporter
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -42,7 +42,7 @@ optional arguments:
                         Set the logging level
 ```
 
-A sample local run can be the following: `python3 src/exporter.py --node=localhost --port=9104 --interval=10 --loglevel=DEBUG`
+A sample local run can be the following: `python3 src/exporter.py --node=localhost --port=9456 --interval=10 --loglevel=DEBUG`
 
 ## Building and running
 
@@ -50,23 +50,22 @@ You can run the exporter either via python itself or in a docker container. The 
 also in the supplied Makefile. For docker use:
 
 ```bash
-$ docker build -t lukasbahr/raspbi-vcgencmd-exporter:<VERSION> -f Dockerfile .
-$ docker tag lukasbahr/raspbi-vcgencmd-exporter:<VERSION> lukasbahr/raspbi-vcgencmd-exporter:<VERSION>
-$ docker run -it -p 9234:9234 lukasbahr/raspbi-vcgencmd-exporter:<VERSION>
+$ docker build -t docker.io/lukasbahr/prometheus-raspberrypi-temp-exporter:<VERSION> -f Dockerfile .
+$ docker run -p 9234:9234 -v /sys/class/thermal/thermal_zone0/:/sys/class/thermal/thermal_zone0/:ro docker.io/lukasbahr/p
+rometheus-raspberrypi-temp-exporter:v0.0.1
 ```
 
 or refer to the supplied Makefile.
 
-You can also download it from docker hub via `docker pull lukasbahr/raspbi-vcgencmd-exporter:<VERSION>`
+## CI/CD
+
+CICD is dun via drone. Drone looks for tags to create container image build tags:
+
+Create git tag for building a image with a tagged version: `git tag <PROM_VERSION> && git push --tags`
+
 
 ## Open ToDo's
 
-- :x: Add CI/CD Support.
+- :heavy_check_mark: Add CI/CD Support.
 - :x: Add unit tests
-- :x: use buildx to create the proper image
-- :x: Add health metric, error metric, scrape interval, general information about exporter etc.
 - :x: Fix docs for docker-compose and docker run
-
-## Further reading
-
-- https://pypi.org/project/vcgencmd/#:~:text=Summary,a%20binding%20to%20that%20tool

@@ -5,10 +5,10 @@ RUNLINT = $(shell which pylint)
 RUNPIP = $(shell which pip)
 RUNDOCKER = $(shell which docker) 
 
-IMAGE = lukasbahr/raspbi-dht22-exporter
+IMAGE = docker.io/lukasbahr/prometheus-raspberrypi-temp-exporter
 VERSION = master
 
-EXPORTER_PORT=8888
+EXPORTER_PORT=9456
 
 all: requirements lint run
  
@@ -19,7 +19,7 @@ requirements:
 	$(RUNPIP) install -r requirements.txt --user
 
 run: 
-	$(RUNPYTHON) src/endpoint.py
+	$(RUNPYTHON) src/exporter.py
 
 login:
 	$(RUNDOCKER) login -u $(DOCKERHUB_USER) -p $(DOCKERHUB_PASSWORD)
