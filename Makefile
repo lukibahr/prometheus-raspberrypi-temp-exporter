@@ -25,7 +25,8 @@ login:
 	$(RUNDOCKER) login -u $(DOCKERHUB_USER) -p $(DOCKERHUB_PASSWORD)
 
 build:
-	$(RUNDOCKER) $(@) -t $(IMAGE):$(VERSION) -f Dockerfile .
+	$(RUNDOCKER) $(@) -t $(IMAGE):$(VERSION) -f Dockerfile.armv6 .
+	$(RUNDOCKER) $(@) -t $(IMAGE):$(VERSION) -f Dockerfile.armv7 .
 
 tag:
 	$(RUNDOCKER) $(@) $(IMAGE):$(VERSION) $(IMAGE):$(VERSION)
