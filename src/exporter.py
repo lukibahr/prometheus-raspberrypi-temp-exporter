@@ -34,7 +34,7 @@ class CustomCollector():
 
         with open(CPUTEMP, 'r') as reader:
             temp = reader.read()
-            celcius_core_temp = temp / 1000
+            celcius_core_temp = int(temp) / 1000
             fahrenheit_core_temp = (9/5)* float(celcius_core_temp) + 32
 
         c.add_metric([self.node, appversion], celcius_core_temp)
