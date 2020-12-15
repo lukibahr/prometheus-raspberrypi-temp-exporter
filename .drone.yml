@@ -10,17 +10,38 @@ steps:
     image: hadolint/hadolint:latest-debian
     commands:
       - hadolint --version
-      - hadolint  Dockerfile
+      - hadolint Dockerfile.armv6
+      - hadolint Dockerfile.armv7
 
-  - name: publish
+  - name: container_armv6
     image: plugins/docker
     environment:
       APPVERSION: ${DRONE_TAG}
     settings:
       repo: lukasbahr/prometheus-raspberrypi-temp-exporter
       tags: 
-        - ${DRONE_TAG}
-      dockerfile: Dockerfile
+        - ${DRONE_TAG}-armv6
+      dockerfile: Dockerfile.armv6
+      username:
+        from_secret: REGISTRY_USER
+      password:
+        from_secret: REGISTRY_PASSWORD
+      build_args:
+        - DRONE_TAG=${DRONE_TAG}
+    when:
+      event:
+        - push
+        - tag
+
+  - name: container_armv7
+    image: plugins/docker
+    environment:
+      APPVERSION: ${DRONE_TAG}
+    settings:
+      repo: lukasbahr/prometheus-raspberrypi-temp-exporter
+      tags: 
+        - ${DRONE_TAG}-armv7
+      dockerfile: Dockerfile.armv7
       username:
         from_secret: REGISTRY_USER
       password:
